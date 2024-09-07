@@ -7,16 +7,18 @@ import { TareaService } from './services/tarea/tarea.service';
 import { TareaController } from './controllers/tarea/tarea.controller';
 import * as dotenv from 'dotenv'
 import { Tarea } from './entities/tarea.entity';
-import { ServicesService } from './auth/services/services.service';
 import { AuthService } from './services/auth/auth.service';
 import { AuthController } from './controllers/auth/auth.controller';
+import { UserService } from './services/user/user.service';
+import { UserController } from './controllers/user/user.controller';
+import { Usuario } from './entities/usuario.entity';
 
 dotenv.config();
 @Module({
   imports: [TypeOrmModule.forRoot(dbConfig),
-            TypeOrmModule.forFeature([Tarea])
+            TypeOrmModule.forFeature([Tarea,Usuario])
   ],
-  controllers: [AppController, TareaController, AuthController],
-  providers: [AppService, TareaService, ServicesService, AuthService],
+  controllers: [AppController, TareaController, AuthController, UserController],
+  providers: [AppService, TareaService,  AuthService, UserService],
 })
 export class AppModule {}
