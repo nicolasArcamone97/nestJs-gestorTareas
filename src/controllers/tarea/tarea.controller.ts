@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { TareaDTO } from 'src/dtos/tarea.dto';
 import { Tarea } from 'src/entities/tarea.entity';
 import { TareaService } from 'src/services/tarea/tarea.service';
@@ -13,7 +14,8 @@ export class TareaController {
         return this.tareaService.getTareas()
     }
 
-
+    
+    @UseGuards(AuthGuard)
     @Get(':id')
     getTarea(@Param('id') id:number):Promise<TareaDTO>{
         return this.tareaService.getTarea(id)
