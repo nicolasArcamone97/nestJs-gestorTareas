@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
-import { AuthGuard } from 'src/auth/auth.guard';
+import { AuthGuard } from 'src/guards/auth.guard';
 import { TareaDTO } from 'src/dtos/tarea.dto';
 import { Tarea } from 'src/entities/tarea.entity';
 import { TareaService } from 'src/services/tarea/tarea.service';
