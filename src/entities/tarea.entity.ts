@@ -10,10 +10,10 @@ export class Tarea {
     id:number;
 
     @Column()
-    titulo:String;
+    titulo:string;
 
     @Column()
-    descripcion:String;
+    descripcion:string;
 
     @CreateDateColumn()
     fechaCreacion: Date

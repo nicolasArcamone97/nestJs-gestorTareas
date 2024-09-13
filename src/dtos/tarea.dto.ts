@@ -1,4 +1,4 @@
-import { IsString, MinLength } from "class-validator";
+import { IsEnum, IsString, MinLength } from "class-validator";
 import { ColorEnum } from "src/enums/color.enum";
 
 export class TareaDTO {
@@ -7,13 +7,12 @@ export class TareaDTO {
 
     @IsString()
     @MinLength(3)
-    titulo:String;
+    titulo:string;
 
     @IsString()
     @MinLength(8)
-    descripcion:String
+    descripcion:string
 
-    fechaCreacion: Date
-
+    @IsEnum(ColorEnum)
     color: ColorEnum
 }

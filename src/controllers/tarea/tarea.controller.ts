@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { TareaDTO } from 'src/dtos/tarea.dto';
 import { Tarea } from 'src/entities/tarea.entity';
@@ -9,6 +9,7 @@ export class TareaController {
 
     constructor(private readonly tareaService:TareaService){}
 
+    @UseGuards(AuthGuard)
     @Get()
     getTareas():Promise<Tarea[]>{
         return this.tareaService.getTareas()
@@ -21,7 +22,8 @@ export class TareaController {
         return this.tareaService.getTarea(id)
     }
 
-
+    @UseGuards(AuthGuard)
+    @HttpCode(HttpStatus.CREATED) // Esto enviará un 201 Created
     @Post()
     crearTarea(@Body() tarea:TareaDTO):Promise<TareaDTO>{
         return this.tareaService.crearTarea(tarea)
