@@ -25,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         throw new UnauthorizedException('Credenciales erroneas')
     }
 
-    return payload
+    return user
   }
 
 

@@ -2,7 +2,6 @@ import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/
 import * as bcryptjs from "bcryptjs";
 import { UserService } from '../user/user.service';
 import { RegisterDto } from 'src/dtos/register-user.dto';
-import { Usuario } from 'src/entities/usuario.entity';
 import { LoginDto } from 'src/dtos/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { PayloadInterface } from 'src/strategies/payload.interface';
@@ -41,17 +40,18 @@ export class AuthService {
 
 
     async login(loginDTO:LoginDto){
-        const userExistente = await this.usuarioService.findOneByEmail(loginDTO.email)
+        const userExistente = await this.userService.findOneByEmail(loginDTO.email)
         
         if (!userExistente) {
-            throw new UnauthorizedException("Email invalido o Inexistente");
+            throw new UnauthorizedException("Correo electrónico o contraseña incorrectos");
         }
+        
         
         // comparamos los password
         const isPasswordValid = await bcryptjs.compare(loginDTO.password, userExistente.password);
 
         if (!isPasswordValid) {
-            throw new UnauthorizedException("Contraseña incorrecta");
+            throw new UnauthorizedException("Correo electrónico o contraseña incorrectos");
         }
         
         //  payload, es un objeto que contiene la información que será incluida en el token JWT
@@ -62,7 +62,7 @@ export class AuthService {
         const token = await this.jwtService.signAsync(payload);
 
 
-        return {token};
+        return { message: 'Login exitoso', token };
 
     }
 
