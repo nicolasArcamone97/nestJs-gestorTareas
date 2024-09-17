@@ -14,24 +14,31 @@ import { UserController } from './controllers/user/user.controller';
 import { Usuario } from './entities/usuario.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './strategies/jwt.strategy';
 
 dotenv.config();
+
 @Module({
-  imports: [TypeOrmModule.forRoot(dbConfig),
-            TypeOrmModule.forFeature([Tarea,Usuario]),
-            ConfigModule.forRoot({
-              isGlobal: true, // Para que el módulo de configuración sea global
-            }),
-            JwtModule.registerAsync({
-              imports: [ConfigModule],
-              inject: [ConfigService],
-              useFactory: (configService: ConfigService) => ({
-                secret: configService.get<string>('JWT_SECRET'),
-                signOptions: { expiresIn: '30s' },
-              }),
-            }),
+  imports: [
+    TypeOrmModule.forRoot(dbConfig),
+    TypeOrmModule.forFeature([Tarea, Usuario]),
+    PassportModule.register({
+      defaultStrategy: 'jwt',  // Registra la estrategia 'jwt'
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true, // Para que el módulo de configuración esté disponible globalmente
+    }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),  // Accede a la variable JWT_SECRET del .env
+        signOptions: { expiresIn: '30s' },  // Configura el tiempo de expiración del token
+      }),
+    }),
   ],
   controllers: [AppController, TareaController, AuthController, UserController],
-  providers: [AppService, TareaService,  AuthService, UserService],
+  providers: [AppService, TareaService, AuthService, UserService, JwtStrategy], // Registra los servicios y la estrategia JWT
 })
 export class AppModule {}

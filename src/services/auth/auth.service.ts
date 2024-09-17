@@ -1,16 +1,19 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import * as bcryptjs from "bcryptjs";
 import { UserService } from '../user/user.service';
-import { RegisterDto } from 'src/dtos/create-user.dto';
+import { RegisterDto } from 'src/dtos/register-user.dto';
 import { Usuario } from 'src/entities/usuario.entity';
 import { LoginDto } from 'src/dtos/login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { PayloadInterface } from 'src/strategies/payload.interface';
 
 @Injectable()
 export class AuthService {
 
     constructor(private readonly usuarioService:UserService,
-                private readonly jwtService: JwtService) {}
+                private readonly jwtService: JwtService,
+                private readonly userService: UserService) {}
+
 
     async register({nombre,email,password}:RegisterDto){
         // verifico si existe en la base de datos el mail
@@ -25,7 +28,7 @@ export class AuthService {
         const hashedPassword = await bcryptjs.hash(password, 10);
         
         // creamos un usuario
-        await this.usuarioService.create({
+        await this.userService.create({
             nombre,
             email,
             password: hashedPassword
@@ -37,32 +40,29 @@ export class AuthService {
     }
 
 
-    async login({email,password}:LoginDto){
-        const userExistente = await this.usuarioService.findOneByEmail(email)
+    async login(loginDTO:LoginDto){
+        const userExistente = await this.usuarioService.findOneByEmail(loginDTO.email)
         
         if (!userExistente) {
-            throw new UnauthorizedException("Email invalido");
+            throw new UnauthorizedException("Email invalido o Inexistente");
         }
         
         // comparamos los password
-        const isPasswordValid = await bcryptjs.compare(password, userExistente.password);
+        const isPasswordValid = await bcryptjs.compare(loginDTO.password, userExistente.password);
 
         if (!isPasswordValid) {
-            throw new UnauthorizedException("Invalid password");
+            throw new UnauthorizedException("Contraseña incorrecta");
         }
         
         //  payload, es un objeto que contiene la información que será incluida en el token JWT
-        const payload = { id: userExistente.id,
+        const payload: PayloadInterface = { id: userExistente.id,
                           email: userExistente.email };
 
         // El método signAsync(payload) toma el payload (el objeto con el email del usuario) y lo convierte en un JWT. 
         const token = await this.jwtService.signAsync(payload);
 
 
-        return {
-            token: token,
-            email: userExistente.email,
-          };
+        return {token};
 
     }
 

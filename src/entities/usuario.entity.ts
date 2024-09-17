@@ -11,7 +11,7 @@ export class Usuario {
     @Column({nullable:false})
     nombre: string
 
-    @Column({unique:true})
+    @Column({nullable: false, unique:true})
     email:string
 
     @Column({nullable:false})
@@ -20,6 +20,12 @@ export class Usuario {
     @OneToMany(() => Tarea, tarea => tarea.user)
     tareas: Tarea[]
 
-    
+
+    constructor(nombre:string, email:string, password:string){
+        this.nombre = nombre
+        this.email = email
+        this.password = password
+    }
+
 
 }
