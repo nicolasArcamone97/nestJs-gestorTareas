@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
 import { TareaDTO } from 'src/dtos/tarea.dto';
 import { Tarea } from 'src/entities/tarea.entity';
 import { JwtAuthGuard } from 'src/guards/JwtAuth.guard';
@@ -9,7 +9,7 @@ export class TareaController {
 
     constructor(private readonly tareaService:TareaService){}
 
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     @Get()
     getTareas():Promise<Tarea[]>{
         return this.tareaService.getTareas()
@@ -28,6 +28,13 @@ export class TareaController {
     crearTarea(@Body() tarea:TareaDTO):Promise<TareaDTO>{
         return this.tareaService.crearTarea(tarea)
     }
+
+    @Post('/tarea-usuario/:userId')
+    async createTarea(@Body() createTareaDto: TareaDTO, @Param('userId', ParseIntPipe) userId: number): Promise<Tarea> {
+        return this.tareaService.nuevaTarea(createTareaDto, userId);
+    }
+
+    
 
 
 }

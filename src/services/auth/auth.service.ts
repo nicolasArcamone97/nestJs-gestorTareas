@@ -61,7 +61,7 @@ export class AuthService {
         // El método signAsync(payload) toma el payload (el objeto con el email del usuario) y lo convierte en un JWT. 
         const token = await this.jwtService.signAsync(payload);
 
-
+        
         return { message: 'Login exitoso', token };
 
     }

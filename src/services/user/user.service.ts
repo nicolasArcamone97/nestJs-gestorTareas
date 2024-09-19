@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from 'src/dtos/create-user.dto';
+import { Tarea } from 'src/entities/tarea.entity';
 import { Usuario } from 'src/entities/usuario.entity';
 import { Repository } from 'typeorm';
 
@@ -11,13 +12,25 @@ export class UserService {
 
 
 
-    async create(createUserDto: CreateUserDto) {
+    public async create(createUserDto: CreateUserDto) {
         return await this.usuarioRepository.save(createUserDto);
       }
     
-    async findOneByEmail(email: string) {
+    public async findOneByEmail(email: string) {
         return await this.usuarioRepository.findOneBy({ email });
     }
     
+
+    public async obtenerTareas(userId:number):Promise<Usuario>{
+        const userExistente: Usuario = await this.usuarioRepository.findOne({where:{id:userId},relations:['tareas']}) 
+
+        if(!userExistente){
+            throw new BadRequestException('El usuario no existe')
+        }
+
+        return userExistente
+    }
+    
+
 
 }

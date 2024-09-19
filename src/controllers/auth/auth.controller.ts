@@ -28,25 +28,3 @@ export class AuthController {
 
 
 
- // login con httpOnly
-//  @HttpCode(HttpStatus.OK)
-//  @Post("login")
-//  async login(@Body() loginDto: LoginDto, @Res() res: Response) {
-
-   // obtener token
-  //  const token = await this.authService.login(loginDto);
-
-   // obtener solo email del login
-  //  const { email } = loginDto
-
-   // Convertir el objeto a string antes de guardarlo en la cookie
-  //  const cookieValue = JSON.stringify({ token, email});
-
-   // establecer y configurar una cookie
-//    res.cookie('token',cookieValue, {
-//      httpOnly:true,
-//      sameSite: 'strict',
-//    })
-         
-//    return res.json({message: 'Login correcto'})
-//  }
