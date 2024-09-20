@@ -16,19 +16,23 @@ export class UserService {
         return await this.usuarioRepository.save(createUserDto);
       }
     
-    public async findOneByEmail(email: string) {
+    public async obtenerUsuario(userId:number): Promise<Usuario>{
+        return await this.usuarioRepository.findOne({where: {id:userId}})
+    }
+
+    public async findOneByEmail(email: string):Promise<Usuario> {
         return await this.usuarioRepository.findOneBy({ email });
     }
     
 
-    public async obtenerTareas(userId:number):Promise<Usuario>{
+    public async obtenerTareas(userId:number):Promise<Tarea[]>{
         const userExistente: Usuario = await this.usuarioRepository.findOne({where:{id:userId},relations:['tareas']}) 
 
         if(!userExistente){
             throw new BadRequestException('El usuario no existe')
         }
 
-        return userExistente
+        return userExistente.tareas
     }
     
 
