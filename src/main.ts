@@ -9,7 +9,8 @@ async function bootstrap() {
   app.enableCors();
 
   app.useGlobalPipes(new ValidationPipe({
-    transform:true
+    whitelist:true, //Ignora los campos que no estan en el dto
+    transform:true //convierte los tipos de datos a los especifiaciones
   }))
 
   const corsOptions: CorsOptions = {

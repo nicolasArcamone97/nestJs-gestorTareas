@@ -11,8 +11,7 @@ export class RegisterDto {
     @IsEmail()
     email: string;
   
-    @IsString()
-    @MinLength(6)
+    @MinLength(4)
     @Transform(({ value }) => value.trim()) //le saca los espacios 
     password: string;
 }

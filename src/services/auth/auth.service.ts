@@ -5,6 +5,7 @@ import { RegisterDto } from 'src/dtos/register-user.dto';
 import { LoginDto } from 'src/dtos/login.dto';
 import { JwtService } from '@nestjs/jwt';
 import { PayloadInterface } from 'src/strategies/payload.interface';
+import { TokenDto } from 'src/dtos/token.dto';
 
 @Injectable()
 export class AuthService {
@@ -65,6 +66,21 @@ export class AuthService {
         return { message: 'Login exitoso', token };
 
     }
+
+
+    async refresh(dto:TokenDto): Promise<any> {
+        // decode: obtener los datos del usuario atravez del token osea decodificar el token 
+        const usuario = await this.jwtService.decode(dto.token)
+        const payload: PayloadInterface = {
+            id: usuario["id"],
+            email: usuario["email"]
+        }
+
+        const token = await this.jwtService.signAsync(payload);
+        return {  message: 'Token refreshed ' , token };
+
+    }
+
 
 
 }
