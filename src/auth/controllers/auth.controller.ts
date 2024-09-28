@@ -27,11 +27,7 @@ export class AuthController {
   }
 
 
-    @Post('logout')
-    logout(){
-      return 'Logout'
-    } 
-
+    
     @Post('refresh')
     refresh(@Body() dto:TokenDto){
       return this.authService.refresh(dto)
