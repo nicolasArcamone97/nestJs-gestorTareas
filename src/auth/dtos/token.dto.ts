@@ -1,3 +1,9 @@
+import { IsString } from "class-validator";
+
 export class TokenDto {
-    token: string
+    @IsString()
+    access_token: string;
+
+    @IsString()
+    refresh_token: string;
 }

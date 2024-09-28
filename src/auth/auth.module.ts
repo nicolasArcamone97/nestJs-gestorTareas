@@ -27,7 +27,6 @@ dotenv.config();
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_SECRET'),  // Accede a la variable JWT_SECRET del .env
-        signOptions: { expiresIn: '600s' },  // Configura el tiempo de expiración del token
       }),
     }),
    

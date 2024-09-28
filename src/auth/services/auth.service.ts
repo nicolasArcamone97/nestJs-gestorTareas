@@ -56,28 +56,29 @@ export class AuthService {
         }
         
         //  payload, es un objeto que contiene la información que será incluida en el token JWT
-        const payload: PayloadInterface = { id: userExistente.id,
-                          email: userExistente.email };
+        const payload: PayloadInterface = { id: userExistente.id, email: userExistente.email };
 
         // El método signAsync(payload) toma el payload (el objeto con el email del usuario) y lo convierte en un JWT. 
-        const token = await this.jwtService.signAsync(payload);
+        const access_token = await this.jwtService.signAsync(payload, { expiresIn: '15m' });
+        const refresh_token = await this.jwtService.signAsync(payload, { expiresIn: '7d' });
 
         
-        return { message: 'Login exitoso', token };
+        return { message: 'Login exitoso', access_token, refresh_token };
 
     }
 
 
+    // refresh token
     async refresh(dto:TokenDto): Promise<any> {
-        // decode: obtener los datos del usuario atravez del token osea decodificar el token 
-        const usuario = await this.jwtService.decode(dto.token)
+        // decode: obtener los datos del usuario atravez del refresh_token osea decodificar el token 
+        const usuario = await this.jwtService.decode(dto.refresh_token)
         const payload: PayloadInterface = {
             id: usuario["id"],
             email: usuario["email"]
         }
 
-        const token = await this.jwtService.signAsync(payload);
-        return {  message: 'Token refreshed ' , token };
+        const newAccesstoken = await this.jwtService.signAsync(payload, {expiresIn:'15m'});
+        return {  message: 'Token refreshed ' , access_token:newAccesstoken };
 
     }
 
