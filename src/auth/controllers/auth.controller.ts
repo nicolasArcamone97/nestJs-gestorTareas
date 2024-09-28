@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res } from '@nestjs/common';
 import { request, Response } from 'express';
 import { RegisterDto } from 'src/auth/dtos/register-user.dto';
 
@@ -13,7 +13,7 @@ export class AuthController {
 
     // @UsePipes(new ValidationPipe())  // Aplica validación automática de los dto
     @Post("register")
-    register(@Body() registerDto: RegisterDto, @Res() res:Response) {
+    register(@Body() registerDto: RegisterDto, @Res() res:Response){
       this.authService.register(registerDto);
       return res.status(HttpStatus.CREATED).json({message:'Usuario registrado'})
     }
@@ -21,9 +21,10 @@ export class AuthController {
     
     @HttpCode(HttpStatus.OK)
     @Post("login")
-    login(@Body() loginDTO:LoginDto) {
-      return this.authService.login(loginDTO)
-    }
+    async login(@Body() loginDTO: LoginDto, @Res() res: Response) {
+      const tokens = await this.authService.login(loginDTO);
+      return res.status(HttpStatus.OK).json(tokens);
+  }
 
 
     @Post('logout')
