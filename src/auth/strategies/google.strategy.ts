@@ -5,6 +5,7 @@ import {Strategy} from "passport-google-oauth20"
 import { VerifiedCallback } from "passport-jwt";
 import googleOauthConfig from "src/config/google-oauth.config";
 import { AuthService } from "../services/auth.service";
+import { AuthgoogleService } from "../services/authgoogle.service";
 
 
 
@@ -13,7 +14,7 @@ import { AuthService } from "../services/auth.service";
 export class GoogleStrategy extends PassportStrategy(Strategy){
 
     constructor(@Inject(googleOauthConfig.KEY) private googleConfig:ConfigType<typeof googleOauthConfig>,
-                private readonly authService:AuthService){
+                private readonly authGoogle:AuthgoogleService){
    
         super({
             clientID:googleConfig.clientID,
@@ -25,11 +26,12 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
 
 
     async validate(accessToken:string, refreshToken:string, profile:any,done:VerifiedCallback){
-        const user = await this.authService.validateGoogleUser({
+        const user = await this.authGoogle.validateGoogleUser({
             nombre:profile.displayName,
             email:profile.emails[0].value,
-            password:""
+            profileImagen: profile.photos[0]?.value || "", // Usa el operador opcional
         })
+        console.log(profile)
         done(null,user)
     }
 

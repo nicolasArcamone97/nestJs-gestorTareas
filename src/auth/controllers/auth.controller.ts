@@ -6,17 +6,20 @@ import { TokenDto } from 'src/auth/dtos/token.dto';
 import { AuthService } from '../services/auth.service';
 import { LoginDto } from '../dtos/login.dto';
 import { GoogleAuthGuard } from 'src/guards/google-auth.guard';
+import { AuthgoogleService } from '../services/authgoogle.service';
 
 @Controller('auth')
 export class AuthController {
 
-    constructor(private readonly authService: AuthService) {}
+    constructor(private readonly authService: AuthService,
+                private readonly authGoogle:AuthgoogleService
+    ) {}
 
     // @UsePipes(new ValidationPipe())  // Aplica validación automática de los dto
     @Post("register")
-    register(@Body() registerDto: RegisterDto, @Res() res:Response){
+    async register(@Body() registerDto: RegisterDto, @Res() res: Response) {
       this.authService.register(registerDto);
-      return res.status(HttpStatus.CREATED).json({message:'Usuario registrado'})
+      return res.status(HttpStatus.CREATED).json({ message: 'Usuario registrado' });
     }
     
     
@@ -42,22 +45,16 @@ export class AuthController {
     @UseGuards(GoogleAuthGuard)
     @Get("google/callback")
     async googleCallback(@Req() request, @Res() response) {
-        // `request.user` debería contener la información del usuario de Google
         const userGoogle = request.user;
+        console.log("User google data:",userGoogle )
+        const user = await this.authGoogle.validateGoogleUser(userGoogle);
 
-        // Lógica para registrar al usuario si no existe
-        const user = await this.authService.validateGoogleUser({
-            nombre: userGoogle.nombre, // Asegúrate de que 'nombre' esté en el perfil
-            email: userGoogle.email,
-            password: "", // O puedes omitir este campo si no es necesario
-        });
+        const token = await this.authGoogle.loginGoogle(user);
 
-        // Puedes generar un token JWT o hacer otra cosa con el usuario
-        const token = await this.authService.loginGoogle({ email: user.email });
-
-        // Redirigir a la aplicación frontend con el token
-        response.redirect(`http://localhost:4200?token=${token.access_token}`);
+        // Retorna el token como respuesta JSON
+        return response.json({ access_token: token.access_token, refresh_token: token.refresh_token });
     }
+
 
 }
 

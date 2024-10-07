@@ -1,5 +1,5 @@
 import { Transform } from "class-transformer";
-import { IsEmail, IsString, MinLength } from "class-validator";
+import { IsEmail, IsOptional, IsString, MinLength } from "class-validator";
 
 
 
@@ -10,7 +10,8 @@ export class RegisterDto {
   
     @IsEmail()
     email: string;
-  
+    
+
     @MinLength(4)
     @Transform(({ value }) => value.trim()) //le saca los espacios 
     password: string;

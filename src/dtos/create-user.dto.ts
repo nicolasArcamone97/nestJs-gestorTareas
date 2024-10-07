@@ -10,6 +10,7 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
   
+
   @IsNotEmpty({message: 'La contraseña del usuario no puede estar vacia'})
   @MinLength(8, {message: 'nombre: longitud minima de 3'})
   @Transform(({ value }) => value.trim()) //le saca los espacios 
