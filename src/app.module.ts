@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { dbConfig } from './db.config';
+import { dbConfig } from './config/db.config';
 import { TareaService } from './services/tarea/tarea.service';
 import { TareaController } from './controllers/tarea/tarea.controller';
 import * as dotenv from 'dotenv'

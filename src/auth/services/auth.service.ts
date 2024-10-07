@@ -6,13 +6,15 @@ import { JwtService } from '@nestjs/jwt';
 import { PayloadInterface } from 'src/auth/strategies/payload.interface';
 import { TokenDto } from 'src/auth/dtos/token.dto';
 import { LoginDto } from '../dtos/login.dto';
+import { CreateUserDto } from 'src/dtos/create-user.dto';
+import { GoogleUserDto } from '../dtos/googleUser.dto';
 
 @Injectable()
 export class AuthService {
 
     constructor(private readonly usuarioService:UserService,
                 private readonly jwtService: JwtService,
-                private readonly userService: UserService) {}
+                ) {}
 
 
     async register({nombre,email,password}:RegisterDto){
@@ -28,7 +30,7 @@ export class AuthService {
         const hashedPassword = await bcryptjs.hash(password, 10);
         
         // creamos un usuario
-        await this.userService.create({
+        await this.usuarioService.create({
             nombre,
             email,
             password: hashedPassword
@@ -39,9 +41,19 @@ export class AuthService {
 
     }
 
+     // Nuevo método para manejar el login de Google
+    async loginGoogle(user: any) {
+        const payload: PayloadInterface = { id: user.id, email: user.email };
+
+        // Generar el JWT para el usuario autenticado por Google
+        const access_token = await this.jwtService.signAsync(payload, { expiresIn: '15m' });
+        const refresh_token = await this.jwtService.signAsync(payload, { expiresIn: '7d' });
+
+        return { access_token, refresh_token };
+    }
 
     async login(loginDTO:LoginDto){
-        const userExistente = await this.userService.findOneByEmail(loginDTO.email)
+        const userExistente = await this.usuarioService.findOneByEmail(loginDTO.email)
         
         if (!userExistente) {
             throw new UnauthorizedException("Correo electrónico o contraseña incorrectos");
@@ -64,7 +76,6 @@ export class AuthService {
 
         
         return { message: 'Login exitoso', access_token, refresh_token };
-
     }
 
 
@@ -83,7 +94,19 @@ export class AuthService {
     }
 
 
-    
+    async validateGoogleUser(googleUser:RegisterDto){
+        const user = await this.usuarioService.findOneByEmail(googleUser.email)
+
+        if(!user){
+            return await this.usuarioService.create({
+                nombre:googleUser.nombre,
+                email:googleUser.email,
+                password:""
+            })
+        }
+
+        return user
+    }
 
 
 }
