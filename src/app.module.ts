@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { dbConfig } from './db.config';
+import { dbConfig } from './config/db.config';
 import { TareaService } from './services/tarea/tarea.service';
 import { TareaController } from './controllers/tarea/tarea.controller';
 import * as dotenv from 'dotenv'
@@ -12,6 +12,7 @@ import { UserController } from './controllers/user/user.controller';
 import { Usuario } from './entities/usuario.entity';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { AuthgoogleService } from './auth/services/authgoogle.service';
 
 
 
@@ -27,6 +28,6 @@ dotenv.config();
     AuthModule
   ],
   controllers: [AppController, TareaController,UserController],
-  providers: [AppService, TareaService,  UserService], 
+  providers: [AppService, TareaService,  UserService, AuthgoogleService], 
 })
 export class AppModule {}
