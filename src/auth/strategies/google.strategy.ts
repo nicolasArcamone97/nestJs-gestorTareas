@@ -31,10 +31,13 @@ export class GoogleStrategy extends PassportStrategy(Strategy){
             email:profile.emails[0].value,
             profileImagen: profile.photos[0]?.value || "", // Usa el operador opcional
         })
-        console.log(profile)
+        console.log("UserGoogle:",profile)
+        console.log("User:",user)
         done(null,user)
+
+
     }
 
-
+    
 
 }
