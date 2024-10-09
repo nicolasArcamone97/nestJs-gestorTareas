@@ -1,5 +1,5 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
-import { request, Response } from 'express';
+import { request, response, Response } from 'express';
 import { RegisterDto } from 'src/auth/dtos/register-user.dto';
 
 import { TokenDto } from 'src/auth/dtos/token.dto';
@@ -46,14 +46,17 @@ export class AuthController {
     @Get("google/callback")
     async googleCallback(@Req() request, @Res() response) {
         const userGoogle = request.user;
-        console.log("User google data:",userGoogle )
         const user = await this.authGoogle.validateGoogleUser(userGoogle);
 
-        const token = await this.authGoogle.loginGoogle(user);
-
-        // Retorna el token como respuesta JSON
-        return response.json({ access_token: token.access_token, refresh_token: token.refresh_token });
+        const tokens = await this.authGoogle.loginGoogle(user);
+        
+        response.redirect(`http://localstore:4200/home?id=${user.id}`)
+      
     }
+
+
+
+    
 
 
 }

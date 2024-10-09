@@ -5,3 +5,10 @@ npm install --save @nestjs/typeorm typeorm mysql2
 npm i --save class-validator class-transformer
 bcryptjs
 @nestjs/jwt
+npm install @nestjs/passport passport passport-google-oauth20
+passport de google tambien
+npm install google-auth-library
+
+
+para angular
+npm install @abacritt/angularx-social-login

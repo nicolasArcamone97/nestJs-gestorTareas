@@ -19,14 +19,16 @@ export class AuthgoogleService {
         // Generar el JWT para el usuario autenticado por Google
         const access_token = await this.jwtService.signAsync(payload, { expiresIn: '15m' });
         const refresh_token = await this.jwtService.signAsync(payload, { expiresIn: '7d' });
-
+        
         return { access_token, refresh_token };
     }
 
 
     async validateGoogleUser(googleUser: GoogleUserDto) {
         const user = await this.usuarioService.findOneByEmail(googleUser.email);
-    
+        
+        
+
         if (!user) {
             return await this.usuarioService.createGoogle({
                 nombre: googleUser.nombre,
