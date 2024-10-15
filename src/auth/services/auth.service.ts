@@ -6,8 +6,6 @@ import { JwtService } from '@nestjs/jwt';
 import { PayloadInterface } from 'src/auth/strategies/payload.interface';
 import { TokenDto } from 'src/auth/dtos/token.dto';
 import { LoginDto } from '../dtos/login.dto';
-import { CreateUserDto } from 'src/dtos/create-user.dto';
-import { GoogleUserDto } from '../dtos/googleUser.dto';
 
 @Injectable()
 export class AuthService {

@@ -9,7 +9,7 @@ export class TareaController {
 
     constructor(private readonly tareaService:TareaService){}
 
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     @Get()
     getTareas():Promise<Tarea[]>{
         return this.tareaService.getTareas()
@@ -29,7 +29,7 @@ export class TareaController {
         return this.tareaService.crearTarea(tarea)
     }
 
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     @Post('/tarea-usuario/:userId')
     async createTarea(@Body() createTareaDto: TareaDTO, @Param('userId', ParseIntPipe) userId: number): Promise<Tarea> {
         return this.tareaService.nuevaTarea(createTareaDto, userId);

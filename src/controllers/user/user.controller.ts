@@ -10,14 +10,14 @@ export class UserController {
     constructor(private readonly usuarioService:UserService){}
 
 
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     @Get('/tareas/:userId')
     async obtenerTareas(@Param('userId',ParseIntPipe) userId:number): Promise<Tarea[]>{
         return this.usuarioService.obtenerTareas(userId)
     }
 
 
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     @Get(':userId')
     async obtenerPerfil(@Param('userId',ParseIntPipe) userId:number): Promise<Usuario>{
         return this.usuarioService.obtenerUsuario(userId)
