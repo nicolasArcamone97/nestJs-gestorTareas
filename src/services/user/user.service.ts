@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { GoogleUserDto } from 'src/auth/dtos/googleUser.dto';
 import { CreateUserDto } from 'src/dtos/create-user.dto';
 import { Tarea } from 'src/entities/tarea.entity';
 import { Usuario } from 'src/entities/usuario.entity';
@@ -17,12 +16,6 @@ export class UserService {
         return await this.usuarioRepository.save(createUserDto);
     }
     
-
-    public async createGoogle(googleUser: GoogleUserDto) {
-        return await this.usuarioRepository.save(googleUser)
-    }
-
-
 
     public async obtenerUsuario(userId:number): Promise<Usuario>{
         return await this.usuarioRepository.findOne({where: {id:userId}})

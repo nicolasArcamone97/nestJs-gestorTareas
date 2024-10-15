@@ -11,8 +11,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from '../auth/strategies/jwt.strategy';
 import googleOauthConfig from 'src/config/google-oauth.config';
-import { GoogleStrategy } from './strategies/google.strategy';
-import { AuthgoogleService } from './services/authgoogle.service';
 
 dotenv.config();
 
@@ -36,7 +34,7 @@ dotenv.config();
    
   ],
   controllers: [AuthController],
-  providers: [AuthService,AuthgoogleService, UserService, JwtStrategy,GoogleStrategy], // Registra los servicios y la estrategia JWT
+  providers: [AuthService, UserService, JwtStrategy], // Registra los servicios y la estrategia JWT
   exports:[PassportModule,JwtModule]
 })
 export class AuthModule {

@@ -1,18 +1,15 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
-import { request, response, Response } from 'express';
+import { Body, Controller,  HttpCode, HttpStatus, Post,  Res, } from '@nestjs/common';
+import {Response } from 'express';
 import { RegisterDto } from 'src/auth/dtos/register-user.dto';
-
 import { TokenDto } from 'src/auth/dtos/token.dto';
 import { AuthService } from '../services/auth.service';
 import { LoginDto } from '../dtos/login.dto';
-import { GoogleAuthGuard } from 'src/guards/google-auth.guard';
-import { AuthgoogleService } from '../services/authgoogle.service';
+
 
 @Controller('auth')
 export class AuthController {
 
-    constructor(private readonly authService: AuthService,
-                private readonly authGoogle:AuthgoogleService
+    constructor(private readonly authService: AuthService
     ) {}
 
     // @UsePipes(new ValidationPipe())  // Aplica validación automática de los dto
@@ -36,25 +33,8 @@ export class AuthController {
       return this.authService.refresh(dto)
     }
     
-    @UseGuards(GoogleAuthGuard)
-    @Get("google/login")
-    googleLogin(): string {
-      return "Redirect to Google login";
-    }
-
-    @UseGuards(GoogleAuthGuard)
-    @Get("google/callback")
-    async googleCallback(@Req() request, @Res() response) {
-        const userGoogle = request.user;
-        const user = await this.authGoogle.validateGoogleUser(userGoogle);
-
-        const tokens = await this.authGoogle.loginGoogle(user);
-        
-        response.redirect(`http://localstore:4200/home?id=${user.id}`)
-      
-    }
-
-
+   
+    
 
     
 

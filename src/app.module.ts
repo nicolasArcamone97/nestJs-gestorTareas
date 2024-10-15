@@ -12,7 +12,6 @@ import { UserController } from './controllers/user/user.controller';
 import { Usuario } from './entities/usuario.entity';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
-import { AuthgoogleService } from './auth/services/authgoogle.service';
 
 
 
@@ -28,6 +27,6 @@ dotenv.config();
     AuthModule
   ],
   controllers: [AppController, TareaController,UserController],
-  providers: [AppService, TareaService,  UserService, AuthgoogleService], 
+  providers: [AppService, TareaService,  UserService], 
 })
 export class AppModule {}
